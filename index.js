@@ -3,7 +3,7 @@ const app = express();
 const compression = require('compression');
 
 app.use(compression());
-
+// ====== CODE TO CHECK IF WE ARE IN DEVELOPMEMT (BUNDLE.JS) ======
 if (process.env.NODE_ENV != 'production') {
     app.use(
         '/bundle.js',
