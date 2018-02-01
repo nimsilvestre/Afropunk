@@ -36,7 +36,7 @@ if (process.env.NODE_ENV != "production") {
 app.use("/public", express.static(__dirname + "/public"));
 
 //WELCOME ROUTE
-app.get("/welcome", function(req, res) {
+app.get("/welcome/", function(req, res) {
     //res.sendFile(__dirname + "/index.html");
     if (req.session.user) {
         res.redirect("/");
@@ -56,7 +56,8 @@ app.post("/register", (req, res) => {
                 id: id,
                 first: req.body.first,
                 last: req.body.last,
-                email: req.body.email
+                email: req.body.email,
+                password: req.body.password
             };
             res.json({success: true});
         });

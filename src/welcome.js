@@ -6,6 +6,7 @@ import { HashRouter, Route } from "react-router-dom";
 import { Registration } from './register'; //curly because it is not the default component
 import { Login } from './login';
 
+
 export function Welcome() {
     return (
         <div id="welcome">

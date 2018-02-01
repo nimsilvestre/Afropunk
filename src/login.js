@@ -36,7 +36,6 @@ export class Login extends React.Component {
         return (
             <div>
                 {this.state.error && <div>FAILURE</div>}
-
                 <p>Email</p>
                 <input
                     placeholder="Email"
