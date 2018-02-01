@@ -1,0 +1,36 @@
+* {
+}
+
+html {
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.wlcm-logo h1 {
+    display: flex;
+    border: 1px solid #000;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 100px;
+    width: 380px;
+}
+
+.wlcm-header {
+    border: 1px solid #000;
+    height: 30%
+}
+.wlcm-footer {
+    border: 1px solid #000;
+    height: 30%
+}
+
+.logo-header {
+    height: 100px;
+    width: 100px
+}
+
+.register-form {
+    border: 1px solid #000;
+}

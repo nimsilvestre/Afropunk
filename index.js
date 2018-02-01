@@ -68,6 +68,23 @@ app.post("/register", (req, res) => {
     });
 });
 
+//USER ROUTE
+/*app.get('/user', (req, res) => {
+    req.session.user = {
+        id: id,
+        first: req.body.first,
+        last: req.body.last,
+        email: req.body.email,
+        image: req.body.image,
+        bio: req.body.bio
+
+        if (req.session.user) {
+            res.json()
+        }
+    };
+});
+*/
+
 
 app.get("*", function(req, res) {
     //will redirect ANY URL TO THE WELCOME PAGE

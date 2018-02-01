@@ -5,8 +5,8 @@ CREATE TABLE users(
     first VARCHAR(100),
     last VARCHAR(100),
     email VARCHAR(100) UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    image VARCHAR(300),
-    bio VARCHAR(300)
+    password VARCHAR(200) NOT NULL,
+    image TEXT,
+    bio TEXT
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

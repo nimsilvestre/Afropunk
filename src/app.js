@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from "axios";
 
+import ProfilePic from './profilepic'
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -14,7 +16,8 @@ class App extends React.Component {
             id: data.id,
             first: data.first,
             last: data.last,
-            image: data.profilepic
+            image: data.image,
+            bio: data.bio-
         }
         showUploader() {
             this.setState({

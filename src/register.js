@@ -36,8 +36,8 @@ export class Registration extends React.Component {
     }
     render() {
         return (
-            <div>
-                {this.state.error && <div>FAILURE</div>}
+            <div className="register-form">
+            <h2>REGISTER</h2>
                 <p>First Name</p>
                 <input
                     placeholder="First Name"
@@ -58,8 +58,8 @@ export class Registration extends React.Component {
                     placeholder="Password"
                     name="pass"
                     onChange={e => this.setFieldValue(e)} />
-
                 <button onClick={() => this.submit()}>Submit</button>
+                {this.state.error && <div>FAILURE</div>}
             </div>
         );
     }

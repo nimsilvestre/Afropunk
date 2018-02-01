@@ -37,3 +37,10 @@ exports.hashPassword = function(plainTextPassword) {
         });
     });
 };
+
+/*
+// User profile
+exports.user = function( first, last, image, bio ) {
+
+}
+*/
