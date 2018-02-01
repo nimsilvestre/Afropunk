@@ -9,35 +9,19 @@ import { Link } from "react-router";
 import Welcome from "./welcome";
 import Logo from "./logo";
 
-// These components swap in and out when path is /WELCOME
-import Registration from "./register";
-import Login from "./login";
 
-const loggedRouter =
-    <HashRouter>
-        <div>
-            <Route path="/" component={ Logo } />
-        </div>
-    </HashRouter>
+//WELCOME PAGE
 
+//THIS CODE CHECK THE URL IN THE COOKIES TO SEE IF THE USER IS LOGGED IN
+var component;
 
-const notLoggedRouter =
-    <HashRouter>
-        <div>
-            <Route exact path="/" component={ Welcome } />
-                <Route path="/register" component={Registration} />
-                <Route path="/login" component={ Login } />
-        </div>
-    </HashRouter>
-
-
-// this dictates which router we will use based on the url. In server, set cookies or something to dictace which url shows up.
-
-let router;
 if (location.pathname == "/welcome/") {
-    router = notLoggedRouter;
+    component = <Welcome />;
 } else {
-    router = loggedRouter;
+    component = <Logo />;
 }
-
-ReactDOM.render(router, document.querySelector("main"));
+//REACTDOM - poe no html esta component
+ReactDOM.render(
+    component,
+    document.querySelector("main") //passing TO THI html element
+);

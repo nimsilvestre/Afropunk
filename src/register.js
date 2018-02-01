@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { HashRouter, Route } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 
 
 export class Registration extends React.Component {
