@@ -7,30 +7,42 @@ html {
 body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
-.wlcm-logo h1 {
+.wlcm-container {
+    border: 2px blue solid;
+}
+
+.wlcm {
+    background-color: beige;
+    color: black;
+    border-radius: 5px;
+    border: 2px dodgerblue solid;
+
+}
+
+.header {
     display: flex;
-    border: 1px solid #000;
-    font-family: 'Permanent Marker', cursive;
-    font-size: 100px;
-    width: 380px;
-}
-
-.wlcm-header {
-    border: 1px solid #000;
-    height: 30%
-}
-.wlcm-footer {
-    border: 1px solid #000;
-    height: 30%
+    height: 150px;
 }
 
 .logo-header {
-    height: 100px;
-    width: 100px
+    object-fit: scale-down
 }
 
-.register-form {
-    border: 1px solid #000;
+.logo {
+    display: flex;
+    height: 400px
+}
+
+.body {
+    display: flex;
+
+}
+
+.footer {
+    display: flex;
+    height: 10%
+
 }

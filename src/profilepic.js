@@ -1,11 +1,15 @@
 import React from "react";
-import { HashRouter, Route } from 'react-router-dom';
+import { Logo } from './logo';
 
+export default function ProfilePic(props) {
+    if (!props.image) {
+        return image = "./default.png";
 
-export function ProfilePic() {
+    }
+    console.log(image);
     return (
          <div>
-         <img />
+         <img onClick={this.props.showUploader} src={props.user.image} alt={props.user.first + ' ' + props.user.last} />
          </div>
     )
 }

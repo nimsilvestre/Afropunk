@@ -1,7 +1,7 @@
 import React from "react";
-import axios from "axios";
+import axios from './axios';
 import { HashRouter, Route } from 'react-router-dom';
-//import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 export class Registration extends React.Component {
@@ -23,9 +23,9 @@ export class Registration extends React.Component {
                 first: this.first,
                 last: this.last,
                 email: this.email,
-                password: this.pass
+                password: this.password
             }).then(({ data }) => {
-                if (data.success) {
+                if (res.data.success) {
                     location.replace("/"); //This is necessary to unable to backspace in the browser
                 } else {
                     this.setState({
@@ -59,6 +59,9 @@ export class Registration extends React.Component {
                     name="pass"
                     onChange={e => this.setFieldValue(e)} />
                 <button onClick={() => this.submit()}>Submit</button>
+                <div>
+                    <Link to="/login">Click here to Login!</Link>
+                </div>
                 {this.state.error && <div>FAILURE</div>}
             </div>
         );

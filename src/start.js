@@ -6,7 +6,8 @@ import { Link } from "react-router";
 
 // Two main pages you can go to:
 import { Welcome } from "./welcome";
-import {Logo} from "./logo";
+import { Logo } from "./logo";
+import { App } from "./app";
 
 
 //THIS CODE CHECK THE URL IN THE COOKIES TO SEE IF THE USER IS LOGGED IN
@@ -15,8 +16,9 @@ var component;
 if (location.pathname == "/welcome") {
     component = <Welcome />;
 } else {
-    component = <Logo />;
+    component = <App />;
 }
+
 
 //REACTDOM - rendering to html this component
 ReactDOM.render(

@@ -1,8 +1,7 @@
 import React from "react";
-import axios from "axios";
-import { HashRouter, Route } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-
+import axios from "./axios"; //axios with csurf- change in every component that requires ajax requests
+//import { HashRouter, Route } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 export class Login extends React.Component {
     constructor(props) {
@@ -13,17 +12,19 @@ export class Login extends React.Component {
             error: false
         };
     }
+
     setFieldValue(e) {
         this[e.target.name] = e.target.value;
     }
+
     submit() {
         axios
-            .post("/logo", {
+            .post("/login", {
                 email: this.email,
-                pass: this.pass
+                password: this.password
             })
             .then(({ data }) => {
-                if (data.success) {
+                if (res.data.success) {
                     location.replace("/"); //This is necessary to unable to backspace in the browser
                 } else {
                     this.setState({
@@ -32,6 +33,7 @@ export class Login extends React.Component {
                 }
             });
     }
+
     render() {
         return (
             <div>
@@ -46,8 +48,10 @@ export class Login extends React.Component {
                     placeholder="Password"
                     name="pass"
                     onChange={e => this.setFieldValue(e)} />
-
                 <button onClick={() => this.submit()}>Login</button>
+                <div>
+                    <Link to="/"> Not registered yet?</Link>
+                </div>
             </div>
         );
     }

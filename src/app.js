@@ -1,47 +1,69 @@
 import React from 'react';
-import axios from "axios";
+import axios from "./axios";
+import { BrowserRouter, Route, Link } from "react-router-dom";
 
-import ProfilePic from './profilepic'
+//import Logo from './logo.js';
+
+import Welcome from './welcome';
+import ProfilePic from './profilepic';
+import Uploader from './uploader';
+import Profile from './profile';
+
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            uploaderShouldBeVisible: false;
-            setImage: false
+            user: '',
+            image: '',
+            uploaderShouldBeVisible: false,
+            uploadFile: '',
+            bio: ''
         };
+
     }
+
     componentDidMount() { //will call after calling render - one life cycle component
-        axios.get('/user').then(({data}) => this.setState()) {
-            id: data.id,
-            first: data.first,
-            last: data.last,
-            image: data.image,
-            bio: data.bio-
-        }
-        showUploader() {
+        axios.get('/user')
+        .then(({ data }) => {
             this.setState({
-                uploaderShouldBeVisible: true
-            })
-        }
+                first: data.first,
+                last: data.last,
+                id: data.id,
+                imageUrl: data.imageUrl,
+                bio: data.bio,
+            });
+        });
     }
+
+    showUploader() {
+        this.setState({
+            uploaderShouldBeVisible: true
+        })
+
+    }
+
+    updateProfileImg(image) {
+        this.setState({ image })
+    }
+
+    updateBio(bio) {
+        this.setState({ bio })
+    }
+
+
     render() {
         return (
-            if (!this.state.id) {
-                return 'Loading...';
-            }
             <div>
-                <ProfilePic images={this.state.image} showUploader={() => this.showUploader()} />
-                <label htmlFor=""></label>
+                <ProfilePic image = {this.state.image} showUploader={() => this.showUploader()} />
+
                 {this.state.uploaderShouldBeVisible && <Uploader setImage={(img) => this.setImage(img)} />}
+
+                            <div>
+                                <a href="/logout">Click here to logout</a>
+                            </div>
             </div>
+
         )
     }
-}
-
-function profilePic(props) { //decides when to call the function when its clicked on
-    if (!props.image) {
-        return null;
-    }
-    return <img onClick={this.props.showUploader} src={props.image} alt={props.first + ' ' + props.last}
 }
