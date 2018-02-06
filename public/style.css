@@ -2,47 +2,44 @@
 }
 
 html {
+    background: black;
+    color: white;
 }
 
 body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
 }
 
-.wlcm-container {
-    border: 2px blue solid;
-}
+
 
 .wlcm {
-    background-color: beige;
-    color: black;
-    border-radius: 5px;
-    border: 2px dodgerblue solid;
-
 }
 
+.logoName{
+}
 .header {
+    border: 1px solid white;
     display: flex;
     height: 150px;
+    align-items: center;
+    padding-left: 30px;
+    padding-top: 30px;
+    font-family: 'FF Container Regular';
 }
 
 .logo-header {
     object-fit: scale-down
 }
 
-.logo {
-    display: flex;
-    height: 400px
-}
 
 .body {
-    display: flex;
 
 }
 
 .footer {
     display: flex;
-    height: 10%
+    height: 10%;
+    align-items:center
 
 }

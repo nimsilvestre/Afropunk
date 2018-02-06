@@ -36,7 +36,7 @@ app.use(function(req, res, next){
     res.cookie('mytoken', req.csrfToken());
     next();
 });
-// ====== CODE TO CHECK IF WE ARE IN DEVELOPMEMT (BUNDLE.JS) ======
+//CODE TO CHECK IF WE ARE IN DEVELOPMEMT (BUNDLE.JS)
 if (process.env.NODE_ENV != "production") {
     app.use(
         "/bundle.js",
@@ -109,21 +109,20 @@ app.post("/register", (req, res) => {
 });
 
 //this is to make sure that logged out users cannot do anything if they are logged in
-function requireUser(req, res, next) {
+/*function requireUser(req, res, next) {
     if (!req.session.user) {
         res.sendStatus(403);
     } else {
         next();
     }
 }
-
+*/
 
 //LOGIN ROUTE
 app.post('/login', (req, res) => {
     if (!req.body.email || !req.body.password) {
         // error: true;
         res.json('Error: Empty input');
-        console.log("Error: Empty input");
     } else {
         //compare against email to  check get password
         db.getUserInfo(req.body.email).then((results) => {
@@ -158,7 +157,7 @@ app.get('/user', (req, res) => {
             first: data.first,
             last: data.last,
             email: data.email,
-            imageUrl: data.imageurl ? config.s3Url + data.imageurl : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
+            imageUrl: data.imageurl,
             bio: data.bio
         });
     });
@@ -185,8 +184,6 @@ app.post('/updateProfilePic', uploader.single('file'), (req, res) => {
     }
 });
 
-/*
-
 // UPDATE BIO
 app.post('/updateBio', (req, res) => {
     db.updateBio(req.body.bio, req.session.user.id)
@@ -197,7 +194,7 @@ app.post('/updateBio', (req, res) => {
             });
         });
 });
-*/
+
 /*
 //OTHER USERS PROFILE PAGE ROUTE
 app.get('/user/:id/info', requireUser, function () { //DO NOT USE THE SAME PATH
@@ -212,7 +209,7 @@ app.get('/user/:id/info', requireUser, function () { //DO NOT USE THE SAME PATH
 })
 */
 
-//LOGOUT OF HEREEEE
+//LOG OUT OF HEREEEE
 app.get('/logout', function(req, res) {
     req.session.user = null;
     res.redirect('/');

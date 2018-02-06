@@ -17,22 +17,19 @@ export default class Uploader extends React.Component {
         //ajax to where??
         var formData = new FormData();
         formData.append('file', this.file);
-        formData.append('id', this.props.user.id);
+        formData.append('id', this.user.id);
 
         axios.post('/pic-upload', FormData)
         .then((res) => {
-            this.props.updateProfileImg(res.data.imageUrl)
+            this.props.updateProfilePic(res.data.imageUrl)
         })
         // resolve
     }
     render() {
         return (
-            //what should be rendered
             <div>
-                <div>
-                    <input type="file" name="file" onChange={this.setFieldValue} />
-                    <button type="button" onClick={this.uploadPic}>Submit</button>
-                </div>
+                <input type="file" name="file" onChange={this.setFieldValue} />
+                <button type="button" onClick={this.uploadPic}>Submit</button>
             </div>
         )
     }

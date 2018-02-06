@@ -7,7 +7,7 @@ import { Link } from "react-router";
 // Two main pages you can go to:
 import { Welcome } from "./welcome";
 import { Logo } from "./logo";
-import { App } from "./app";
+import App from "./app";
 
 
 //THIS CODE CHECK THE URL IN THE COOKIES TO SEE IF THE USER IS LOGGED IN

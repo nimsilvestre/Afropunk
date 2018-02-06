@@ -18,20 +18,19 @@ export class Login extends React.Component {
     }
 
     submit() {
-        axios
-            .post("/login", {
-                email: this.email,
-                password: this.password
-            })
-            .then(({ data }) => {
-                if (res.data.success) {
-                    location.replace("/"); //This is necessary to unable to backspace in the browser
-                } else {
-                    this.setState({
-                        error: true
-                    });
-                }
-            });
+        axios.post("/login", {
+            email: this.email,
+            password: this.password
+        })
+        .then(({ data }) => {
+            if (data.success) {
+                location.replace("/"); //This is necessary to unable to backspace in the browser
+            } else {
+                this.setState({
+                error: true
+                });
+            }
+        });
     }
 
     render() {
@@ -39,15 +38,9 @@ export class Login extends React.Component {
             <div>
                 {this.state.error && <div>FAILURE</div>}
                 <p>Email</p>
-                <input
-                    placeholder="Email"
-                    name="email"
-                    onChange={e => this.setFieldValue(e)} />
+                <input placeholder="Email" name="email" onChange={e => this.setFieldValue(e)} />
                 <p>Password</p>
-                <input
-                    placeholder="Password"
-                    name="pass"
-                    onChange={e => this.setFieldValue(e)} />
+                <input placeholder="Password" name="pass" onChange={e => this.setFieldValue(e)} />
                 <button onClick={() => this.submit()}>Login</button>
                 <div>
                     <Link to="/"> Not registered yet?</Link>

@@ -1,12 +1,13 @@
 import React from "react";
 import { HashRouter, Route } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+
+import { ProfilePic } from "./profilepic";
+import { Uploader } from "./uploaderPic";
 
 export function Logo() {
     return (
         <div>
-            <h1>Logo</h1>
-            <img src="/public/test.png" />
+        <Link className="logoName" to="/">AFROPUNK</Link>
         </div>
     );
 }

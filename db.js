@@ -1,3 +1,5 @@
+console.log('LISTENING TO QUERIES');
+
 const spicedPg = require('spiced-pg');
 const bcrypt = require('bcryptjs');
 var db;

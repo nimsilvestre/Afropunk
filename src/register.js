@@ -8,8 +8,8 @@ export class Registration extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstName: "",
-            lastName: "",
+            first: "",
+            last: "",
             email: "",
             password: "",
             error: false
@@ -25,7 +25,7 @@ export class Registration extends React.Component {
                 email: this.email,
                 password: this.password
             }).then(({ data }) => {
-                if (res.data.success) {
+                if (data.success) {
                     location.replace("/"); //This is necessary to unable to backspace in the browser
                 } else {
                     this.setState({
@@ -56,7 +56,7 @@ export class Registration extends React.Component {
                 <p>Password</p>
                 <input
                     placeholder="Password"
-                    name="pass"
+                    name="password"
                     onChange={e => this.setFieldValue(e)} />
                 <button onClick={() => this.submit()}>Submit</button>
                 <div>
