@@ -3,15 +3,23 @@ import { HashRouter, Route } from "react-router-dom";
 import { Registration } from "./register"; //curly because it is not the default component
 import { Login } from "./login";
 
+
 export function Welcome() {
     return (
         <div id="wlcm-container">
             <div className="wlcm header">
-                <h1>AFROPUNK</h1>
+                <h1 className="logoName">AFROPUNK</h1>
+                <nav>
+                <a href="/register">REGISTER</a> |
+                <a href="/login">LOGIN</a> |
+                <a href="#">ABOUT</a> |
+                <a href="/http://www.afropunk.com/">AFROPUNK FEST</a>
+                </nav>
             </div>
 
             <div className="wlcm body">
-            <video>
+            <video className='videoTag' autoPlay >
+            <source src="/public/afropunk.mp4" type="video/mp4" />
             </video>
             </div>
 

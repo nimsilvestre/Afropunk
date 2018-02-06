@@ -13,11 +13,26 @@ body {
 
 
 
-.wlcm {
+.body {
+    min-width: 100%;
+    min-height: 100%;
+}
+
+video {
+    min-width: 100%;
+    min-height: 100%
 }
 
 .logoName{
+    font-family: 'FF Container Regular';
 }
+
+a {
+    text-decoration: none;
+    font-family: helvetica;
+    color: white;
+}
+
 .header {
     border: 1px solid white;
     display: flex;
@@ -25,7 +40,7 @@ body {
     align-items: center;
     padding-left: 30px;
     padding-top: 30px;
-    font-family: 'FF Container Regular';
+    justify-content: space-between;
 }
 
 .logo-header {
