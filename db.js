@@ -88,6 +88,8 @@ module.exports.getProfileInfo = function(id) {
 module.exports.updateProfilePic = function(img, id) {
     // const imgUrl = S3config.s3Url + img;
     const params = [img, id];
+    console.log(params);
+
     const q = 'UPDATE users SET imageUrl = $1 WHERE id = $2 RETURNING imageUrl';
     return db.query(q,params)
         .then((results) => {

@@ -15,10 +15,10 @@ if (process.env.NODE_ENV == 'production') {
 const client = knox.createClient({
     key: secrets.awsKey,
     secret: secrets.awsSecret,
-    bucket: 'soacialnetworknash'
+    bucket: 'socialnetworknash'
 });
 
-module.exports.upload = function(file) {
+module.exports.uploadToS3 = function(file) {
     return new Promise(function(resolve, reject) {
         const s3Request = client.put(file.filename, {
             'Content-Type': file.mimetype,
@@ -33,7 +33,7 @@ module.exports.upload = function(file) {
                 resolve()
             }
             else {
-                s3Response.statusCode == 404;
+                console.log(s3Response.statusCode);
                 reject()
             }
         })

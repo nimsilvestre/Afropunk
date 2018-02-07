@@ -1,48 +1,30 @@
 import React from "react";
-import axios from './axios';
 
-import { ProfilePic } from './profilepic';
-import { Logo } from './logo';
-import { UserBio } from './userbio';
+import { ProfilePic } from "./profilepic";
+//import { UserBio } from "./userbio";
+
 
 export class Profile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            id: "",
-            first: "",
-            email: "",
-            bio: "",
-            setBio: "",
-            error: false
-        };
+        this.state = {};
     }
-    setBio() {
-        this[e.target.name] = e.target.value; //function to change Edit bio
-    }
-    submit() {
-        axios.post("/updateBio", {
-            bio: this.bio
-        }).then(({ data }) => {
-            if (data.sucess) {
-                //location.replace
-            } else {
-            }
-        });
-    }
+
     render() {
         return (
-            
-        )
+            <div className="profile">
+                <div className="user-profilepic">
+                    <ProfilePic image={this.props.image} />
+                </div>
+                <div className="user-info">
+                    <h3>
+                        {this.props.first} {this.props.last}
+                    </h3>
+                    <div className="user-bio">
+                        {this.props.bio} <button>Edit your bio</button>
+                    </div>
+                </div>
+            </div>
+        );
     }
-
 }
-
-
-
-/*id={this.state.id}
-first={this.state.first}
-last={this.state.last}
-profilePic={this.state.profilePic}
-bio={this.state.bio}
-setBio={this.setBio}*/

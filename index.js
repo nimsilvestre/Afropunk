@@ -10,7 +10,7 @@ const csurf = require("csurf");
 const s3 = require("./s3.js");
 const multer = require("multer");
 const uidSafe = require("uid-safe");
-
+const path = require("path");
 const config = require("./config.json");
 
 
@@ -59,6 +59,7 @@ const diskStorage = multer.diskStorage({
     },
     filename: function(req, file, callback) {
         uidSafe(24).then(function(uid) {
+
             //uidSafe generate un unique name with 24 caracters
             callback(null, uid + path.extname(file.originalname));
         });
@@ -157,14 +158,14 @@ app.get('/user', (req, res) => {
             first: data.first,
             last: data.last,
             email: data.email,
-            imageUrl: data.imageurl,
+            imageUrl: config.s3Url + data.imageurl,
             bio: data.bio
         });
     });
 });
 
 
-app.post('/updateProfilePic', uploader.single('file'), (req, res) => {
+app.post('/pic-upload', uploader.single('file'), (req, res) => {
     if (req.file) {
         console.log('Uploading some pics');
         s3.uploadToS3(req.file)
@@ -176,6 +177,7 @@ app.post('/updateProfilePic', uploader.single('file'), (req, res) => {
                     imageUrl: config.s3Url + req.file.filename
                 });
             }).catch((err) => {
+                console.log("error on upload",err);
             });
     } else {
         res.json({
@@ -197,7 +199,7 @@ app.post('/updateBio', (req, res) => {
 
 /*
 //OTHER USERS PROFILE PAGE ROUTE
-app.get('/user/:id/info', requireUser, function () { //DO NOT USE THE SAME PATH
+app.get('/user/:id/info', requireUser, function () { //DO NOT USE THE SAME PATH - will sk
     if(req.params.id == req.session.user.id) {
         return res.json({
             redirect: true

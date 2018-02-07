@@ -1,18 +1,21 @@
 import React from "react";
 
-export default function ProfilePic(props) {
+export function ProfilePic(props) {
     let image;
     if (!props.image) {
         image = "./public/default.png";
     } else {
         image = props.image;
     }
+    console.log(props);
     return (
-         <div>
-            <img onClick={props.showUploader} src={image} alt={props.first + ' ' + props.last} />
-         </div>
-    )
+        <div className="pic-holder" >
+            <img
+                className="profile-pic"
+                onClick={props.showUploader}
+                src={image}
+                alt={props.first + " " + props.last}
+            />
+        </div>
+    );
 }
-
-
-//link this thing to the user profile!

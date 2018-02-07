@@ -2,9 +2,8 @@ import React from "react";
 import axios from "./axios";
 import { BrowserRouter, Route, Link } from "react-router-dom";
 
-import { Logo } from "./logo";
-//import { Profile } from "./profile";
-import ProfilePic from "./profilepic";
+import { Profile } from "./profile";
+import {ProfilePic } from "./profilepic";
 import Uploader from "./uploaderPic";
 // import Profile from './profile';
 
@@ -18,6 +17,7 @@ export default class App extends React.Component {
             uploadFile: "",
             bio: ""
         };
+        this.showUploader = this.showUploader.bind(this)
     }
 
     componentDidMount() {
@@ -27,7 +27,7 @@ export default class App extends React.Component {
                 first: data.first,
                 last: data.last,
                 id: data.id,
-                imageUrl: data.imageUrl,
+                image: data.imageUrl,
                 bio: data.bio
             });
         });
@@ -50,25 +50,40 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <div>
-            <Logo />
-            <ProfilePic image = {this.state.image} showUploader={() => this.showUploader()} />
-            {this.state.uploaderShouldBeVisible && <Uploader setImage={(img) => this.setImage(img)} />}
-            <a href="/logout">Click here to logout</a>
-            </div>
-        )
+            <BrowserRouter>
+                <div className="wrapper">
+                    <header className="header-profile">
+                    <h1 className="logoProfile">AFROPUNK</h1>
+                    <nav>
+                    <a className="logout-btn" href="/logout">LOG OUT</a>
+                    </nav>
+                    <div className="profile-size">
+                    <ProfilePic
+                        image={this.state.image}
+                        showUploader={() => this.showUploader()}
+                    />
+                    </div>
+                    </header>
+                    {this.state.uploaderShouldBeVisible && (
+                        <Uploader setImage={img => this.setState({image: img})} />
+                    )}
+                    <Route
+                        exact
+                        path="/"
+                        render={() => (
+                            <Profile
+                                id={this.state.id}
+                                first={this.state.first}
+                                last={this.state.last}
+                                image={this.state.image}
+                                bio={this.state.bio}
+                                updateBio={this.updateBio}
+                                showUploader={this.showUploader}
+                            />
+                        )}
+                    />
+                </div>
+            </BrowserRouter>
+        );
     }
 }
-
-/*
-<Route
-    path="/"
-    render={() => (
-        <Profile
-            id={this.state.id}
-            first={this.state.first}
-            last={this.state.last}
-            profilePic={this.state.profilePic}
-            bio={this.state.bio}
-            setBio={this.setBio} />)}
-*/

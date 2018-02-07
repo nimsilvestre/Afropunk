@@ -10,9 +10,9 @@ export function Welcome() {
             <div className="wlcm header">
                 <h1 className="logoName">AFROPUNK</h1>
                 <nav>
-                <a href="/register">REGISTER</a> |
-                <a href="/login">LOGIN</a> |
-                <a href="#">ABOUT</a> |
+                <a href="/register">REGISTER</a>
+                <a href="/login">LOGIN</a>
+                <a href="#">ABOUT</a>
                 <a href="/http://www.afropunk.com/">AFROPUNK FEST</a>
                 </nav>
             </div>
