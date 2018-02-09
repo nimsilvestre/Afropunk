@@ -118,6 +118,20 @@ module.exports.updateBio = function(bio, id) {
         });
 };
 
+
+module.exports.getUserInfoById = function(id) {
+    const q = `
+    SELECT * FROM users
+    WHERE  id = $1`
+    const params = [id]
+    return db.query(q, params)
+        .then((results) => {
+            return results.rows[0];
+        }).catch((err) => {
+            console.log('Theres an error on db getUserInfoById', err);
+        })
+
+}
 /*
 function getFriendStatus(aId, bId) {
     const q = `SELECT * FROM `

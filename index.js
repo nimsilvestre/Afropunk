@@ -197,19 +197,30 @@ app.post('/updateBio', (req, res) => {
         });
 });
 
-/*
+
 //OTHER USERS PROFILE PAGE ROUTE
-app.get('/user/:id/info', requireUser, function () { //DO NOT USE THE SAME PATH - will sk
-    if(req.params.id == req.session.user.id) {
-        return res.json({
-            redirect: true
+app.get('/user/info/:id', (req, res) => { //DO NOT USE THE SAME PATH - will sk
+    const otherUserId = req.params.id;
+        db.getUserInfoById(otherUserId).then( data => {
+            if (data.imageUrl == null) {
+                data.imageUrl = "./public/default.png"
+            } else {
+                data.imageUrl = config.s3Url + data.imageUrl
+            }
+            res.json({
+                sucess: true,
+                imageUrl: data.imageUrl,
+                first: data.first,
+                last: data.last,
+                bio: data.bio
+            })
+        }).catch((err) => {
+            console.log("An err in getting other user id", err);
+
         })
-    }
-    db.getUserInfoById(req.session.user.id) {
-        //do somthing
-    }
+
 })
-*/
+
 
 //LOG OUT OF HEREEEE
 app.get('/logout', function(req, res) {

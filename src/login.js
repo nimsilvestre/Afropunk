@@ -35,16 +35,15 @@ export class Login extends React.Component {
 
     render() {
         return (
-            <div>
-                {this.state.error && <div>FAILURE</div>}
+            <div className="login-form">
+                <h2>LOGIN</h2>
                 <p>Email</p>
                 <input placeholder="Email" name="email" onChange={e => this.setFieldValue(e)} />
                 <p>Password</p>
-                <input placeholder="Password" name="pass" onChange={e => this.setFieldValue(e)} />
+                <input placeholder="Password" name="password" type="password" onChange={e => this.setFieldValue(e)} />
                 <button onClick={() => this.submit()}>Login</button>
-                <div>
-                    <Link to="/"> Not registered yet?</Link>
-                </div>
+                {this.state.error && <div>Invalid Authentification! Try again.</div>}
+                    <Link className="login-hover" to="/">REGISTER</Link>
             </div>
         );
     }

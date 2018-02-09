@@ -3,7 +3,7 @@
 
 html {
     background: white;
-    color: white;
+    color: black;
 }
 
 body {
@@ -21,11 +21,13 @@ body {
 video {
     min-width: 100%;
     min-height: 100%;
+    position: absolute;
 }
 
 .logoName{
     font-family: 'FF Container Regular';
     font-size: 3em;
+    color: white;
 }
 
 a {
@@ -46,6 +48,8 @@ a {
     justify-content: space-between;
     width: 100%;
     background: black;
+    z-index: 5000;
+
 }
 
 .header-profile {
@@ -62,6 +66,7 @@ a {
     margin-left: 30px;
     font-family: 'FF Container Regular';
     font-size: 3em;
+    color: black
 }
 
 .logout-btn {
@@ -86,6 +91,10 @@ a {
 
 }
 
+.profile {
+    color black;
+}
+
 .upload-modal{
     height: 200px;
     width: 150px;
@@ -105,12 +114,55 @@ a {
     flex-direction: column;
     font-family: helvetica;
     width: 320px;
-    height: 427px;
+    height: 440px;
+    background-color: rgba(255, 41, 170, 0.6);
+    color: #fff;
+    box-sizing: border-box;
+    padding: 37px 30px;
+    z-index: 1;
+    position: absolute;
+    margin-left: 8%;
+    margin-top: 15%;
+    justify-content: space-between;
+    align-items:center;
+    border-radius:10px;
+}
+
+.register-form input {
+    border:1px solid #bbb;
+    border-radius:20px;
+}
+
+.register-hover:hover {
+    color: #ff0dbf;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    font-family: helvetica;
+    width: 320px;
+    height: 440px;
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
     box-sizing: border-box;
     padding: 37px 30px;
-    z-index: 5000000000;
+    z-index: 1;
+    position: absolute;
+    margin-left: 8%;
+    margin-top: 15%;
+    justify-content: space-between;
+    align-items:center;
+    border-radius:10px;
+}
+
+.login-form input {
+    border:1px solid #bbb;
+    border-radius:20px;
+}
+
+.login-hover:hover {
+    color: #ff0dbf;
 }
 
 

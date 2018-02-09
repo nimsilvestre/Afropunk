@@ -57,12 +57,14 @@ export class Registration extends React.Component {
                 <input
                     placeholder="Password"
                     name="password"
+                    type="password"
                     onChange={e => this.setFieldValue(e)} />
                 <button onClick={() => this.submit()}>Submit</button>
+                {this.state.error && <div>Fail to register! Please, try again.</div>}
                 <div>
-                    <Link to="/login">Click here to Login!</Link>
+                    <Link className="register-hover" to="/login">Already registered?</Link>
                 </div>
-                {this.state.error && <div>FAILURE</div>}
+
             </div>
         );
     }

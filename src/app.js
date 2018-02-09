@@ -1,9 +1,12 @@
 import React from "react";
 import axios from "./axios";
-import { BrowserRouter, Route, Link } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 
+import { Link } from "react-router-dom";
+
+import { OtherUser } from "./otheruser";
 import { Profile } from "./profile";
-import {ProfilePic } from "./profilepic";
+import { ProfilePic } from "./profilepic";
 import Uploader from "./uploaderPic";
 // import Profile from './profile';
 
@@ -53,7 +56,7 @@ export default class App extends React.Component {
             <BrowserRouter>
                 <div className="wrapper">
                     <header className="header-profile">
-                    <h1 className="logoProfile">AFROPUNK</h1>
+                    <Link to="/" className="logoProfile">AFROPUNK</Link>
                     <nav>
                     <a className="logout-btn" href="/logout">LOG OUT</a>
                     </nav>
@@ -80,8 +83,13 @@ export default class App extends React.Component {
                                 updateBio={this.updateBio}
                                 showUploader={this.showUploader}
                             />
+
                         )}
                     />
+                    <Route
+                            exact path="/user/:id"
+                            component={OtherUser}
+                        />
                 </div>
             </BrowserRouter>
         );

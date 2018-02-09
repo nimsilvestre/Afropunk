@@ -18,7 +18,7 @@ export function Welcome() {
             </div>
 
             <div className="wlcm body">
-            <video className='videoTag' autoPlay >
+            <video className='videoTag' type="video/mp4" autoPlay >
             <source src="/public/afropunk.mp4" type="video/mp4" />
             </video>
             </div>
