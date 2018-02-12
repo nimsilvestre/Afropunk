@@ -1,10 +1,10 @@
-console.log('LISTENING TO QUERIES');
+console.log("LISTENING TO QUERIES");
 
-const spicedPg = require('spiced-pg');
-const bcrypt = require('bcryptjs');
+const spicedPg = require("spiced-pg");
+const bcrypt = require("bcryptjs");
 var db;
 
-const S3config = require('./config.json');
+const S3config = require("./config.json");
 
 if (process.env.DATABASE_URL) {
     db = spicedPg(process.env.DATABASE_URL);
@@ -12,17 +12,19 @@ if (process.env.DATABASE_URL) {
     db = spicedPg(`postgres:postgres:postgres@localhost:5432/soacialnetwork`);
 }
 
-
 // Register
 module.exports.register = function(first, last, email, password) {
     const params = [first, last, email, password];
     const q = `INSERT INTO USERS (first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING id`;
-    return db.query(q, params).then(function(results) {
-        console.log("db reg results", results.rows);
-        return results.rows[0].id;
-    }).catch((err) => {
-        console.log("error in sending registration data to db", err);
-    });
+    return db
+        .query(q, params)
+        .then(function(results) {
+            console.log("db reg results", results.rows);
+            return results.rows[0].id;
+        })
+        .catch(err => {
+            console.log("error in sending registration data to db", err);
+        });
 };
 
 // Hash password
@@ -42,7 +44,6 @@ module.exports.hashPassword = function(plainTextPassword) {
     });
 };
 
-
 // check password on login
 module.exports.checkPassword = function(plainTextPassword, storedHash) {
     return new Promise((resolve, reject) => {
@@ -56,33 +57,35 @@ module.exports.checkPassword = function(plainTextPassword, storedHash) {
     });
 };
 
-
 // match password up with user info for logged In Router
 module.exports.getUserInfo = function(email) {
-    return db.query(`SELECT *
+    return db
+        .query(
+            `SELECT *
      FROM users
-     WHERE email = $1`,[email]).then((results) => {
-        console.log("results from getUserInfo: ", results.rows);
-        return results.rows[0];
-    }).catch(function(err) {
-        console.log("error in getUserInfo", err);
-        throw err;
-    });
+     WHERE email = $1`,
+            [email]
+        )
+        .then(results => {
+            console.log("results from getUserInfo: ", results.rows);
+            return results.rows[0];
+        })
+        .catch(function(err) {
+            console.log("error in getUserInfo", err);
+            throw err;
+        });
 };
-
 
 // Get profile info
 module.exports.getProfileInfo = function(id) {
     console.log("id:", id);
     const q = `SELECT * FROM users WHERE id = $1`;
-    const params = [ id ];
-    return db.query(q, params)
-        .then(results => {
-            console.log("results from db.getProfileInfo: ", results.rows[0]);
-            return results.rows[0];
-        });
+    const params = [id];
+    return db.query(q, params).then(results => {
+        console.log("results from db.getProfileInfo: ", results.rows[0]);
+        return results.rows[0];
+    });
 };
-
 
 // send photo to database
 module.exports.updateProfilePic = function(img, id) {
@@ -90,16 +93,17 @@ module.exports.updateProfilePic = function(img, id) {
     const params = [img, id];
     console.log(params);
 
-    const q = 'UPDATE users SET imageUrl = $1 WHERE id = $2 RETURNING imageUrl';
-    return db.query(q,params)
-        .then((results) => {
+    const q = "UPDATE users SET imageUrl = $1 WHERE id = $2 RETURNING imageUrl";
+    return db
+        .query(q, params)
+        .then(results => {
             console.log("results from db updateprofilepic: ", results.rows[0]);
             return results.rows[0];
-        }).catch((err) => {
+        })
+        .catch(err => {
             console.log("err in updateProfilePic", err);
         });
 };
-
 
 //Update / set bio
 module.exports.updateBio = function(bio, id) {
@@ -109,37 +113,69 @@ module.exports.updateBio = function(bio, id) {
         SET bio = $1
         WHERE id = $2
         RETURNING bio`;
-    return db.query(q,params)
-        .then((results) => {
+    return db
+        .query(q, params)
+        .then(results => {
             console.log("results from updateBio db", results.rows[0]);
             return results.rows[0];
-        }).catch((err) => {
+        })
+        .catch(err => {
             console.log("error in updateBio db", err);
         });
 };
 
-
 module.exports.getUserInfoById = function(id) {
     const q = `
     SELECT * FROM users
-    WHERE  id = $1`
-    const params = [id]
-    return db.query(q, params)
-        .then((results) => {
+    WHERE  id = $1`;
+    const params = [id];
+    return db
+        .query(q, params)
+        .then(results => {
             return results.rows[0];
-        }).catch((err) => {
-            console.log('Theres an error on db getUserInfoById', err);
         })
+        .catch(err => {
+            console.log("Theres an error on db getUserInfoById", err);
+        });
+};
 
-}
+module.exports.senderRequestStatus = function(senderId, recipientId) {
+    return db
+        .query(
+            `INSERT into connection_requests (sender_id, recipient_id, status) VALUES ($1, $2, $3)`,
+            [senderId, recipientId, 1]
+        )
+        .then(() => {
+        })
+        .catch(() => {
+        });
+};
+
+module.exports.getFriendRequestInfo = function(senderId, recipientId) {
+    return db.query(
+            `SELECT * FROM connection_requests
+            WHERE (recipient_id = $1 AND sender_id = $2)
+            OR (recipient_id = $2 and sender_id = $1)`,
+            [senderId, recipientId]
+        )
+        .then(results => {
+            return results;
+        });
+};
+
 /*
+    const PENDING = 1, ACCEPTED = 2;
+
+const q = `
+    SELECT users.id, first, last, image, status
+    FROM friend_requests
+    JOIN users
+    ON (status = ${PENDING} AND recipient_id = $1 AND requester_id = users.id)
+    OR (status = ${ACCEPTED} AND recipient_id = $1 AND requester_id = users.id)
+    OR (status = ${ACCEPTED} AND requester_id = $1 AND recipient_id = users.id)
+`;
 function getFriendStatus(aId, bId) {
     const q = `SELECT * FROM `
 }
 
-1 = pending
-2 = accepted
-3 = rejected
-4 = canceled
-5 = terminated
 */

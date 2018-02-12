@@ -221,6 +221,7 @@ app.get('/user/info/:id', (req, res) => { //DO NOT USE THE SAME PATH - will sk
 
 })
 
+//
 
 //LOG OUT OF HEREEEE
 app.get('/logout', function(req, res) {
