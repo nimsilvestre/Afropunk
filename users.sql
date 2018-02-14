@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS frie;
-
+DROP TABLE IF EXISTS friends;
 
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
@@ -23,12 +22,4 @@ CREATE TABLE friends (
 );
 
 
-/*
-CREATE TABLE connection_requests (
-    id SERIAL primary key,
-    sender_id INTEGER NOT NULL,
-    recipient_id INTEGER NOT NULL,
-    status VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP
-);
-*/
+/* user1_id = sender | user2_id = receiver */

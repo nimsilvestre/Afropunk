@@ -1,0 +1,6 @@
+HEROKU COMPILATION:
+
+1. generate fly file
+    - CMD: npm run build
+    - commit
+    - push

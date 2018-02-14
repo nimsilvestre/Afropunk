@@ -1,4 +1,4 @@
-console.log("LISTENING TO QUERIES");
+^console.log("LISTENING TO QUERIES");
 
 const spicedPg = require("spiced-pg");
 const bcrypt = require("bcryptjs");
@@ -141,9 +141,9 @@ module.exports.getUserInfoById = function(id) {
 
 //MODULE FRIEND REQUEST
 module.exports.sendRequestStatus = function(user1_id, user2_id) {
-    const q = `SELECT curr_status FROM friends
-    WHERE user1_id = $1 AND user2_id = $2
-        OR  user1_id = $2 AND user2_id = $1`;
+    const q = `SELECT curr_status, user1_id FROM friends
+    WHERE (user1_id = $1 AND user2_id = $2)
+        OR  (user1_id = $2 AND user2_id = $1)`;
     const params = [user1_id, user2_id];
     return db
         .query(q, params)

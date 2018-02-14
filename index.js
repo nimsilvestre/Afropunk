@@ -123,6 +123,7 @@ app.post("/login", (req, res) => {
         db
             .getUserInfo(req.body.email)
             .then(results => {
+                console.log("login",results);
                 return db
                     .checkPassword(req.body.password, results.password)
                     .then(match => {
@@ -233,28 +234,34 @@ app.get("/user/info/:id", (req, res) => {
 app.post("/getRelStatus", (req, res) => {
     //get userid of whose profile we want to see
     const user1_id = req.session.user.id;
-    const user2_id = req.params.id;
+    const user2_id = req.body.userId;
     let relStatus;
+    console.log(user1_id, user2_id);
     //in first query check logged in user id with user1_id, indirectly checking whether
     //the logged in person sent the friend request to this other user or not
-    db.sendRequestStatus(user1_id, user2_id, relStatus).then(result => {
+    db.sendRequestStatus(user1_id, user2_id).then(result => {
+        console.log(result);
         if (!result) {
             relStatus = "none";
             res.json({
                 status: relStatus});
         } else {
-            if (result.curr_status === "pending") {
-                relStatus = "accept";
+            if (result.curr_status == 1) {
+                console.log("pending");
+                relStatus = "pending";
                 res.json({
                     status: relStatus});
             } else {
-                if ((relStatus = result.curr_status)) {
+                if ((result.curr_status == 2)) {
+                    console.log("accepted");
                     res.json({
+                        relStatus = "accepted"
                         status: relStatus});
                 } else {
-                    if ((relStatus = result.curr_status)) {
+                    if ((result.curr_status == 3)) {
                         res.json({
-                            status: relStatus
+                            console.log("canceled");
+                            status: "none"
                         });
                     }
                 }
@@ -262,15 +269,14 @@ app.post("/getRelStatus", (req, res) => {
         }
     });
 });
-//END OF POST ROUTER FOR GETTING THE RELSTATUS
+//END OF POST ROUTER FOR GETTING THE RELATION STATUS
 
-//ROUTER FOR GETTING THE CHANGERELSTATUS:
+//ROUTER FOR GETTING THE CHANGE RELATION STATUS:
 app.post("/changeRelStatus", (req, res) => {
     const {action, userId} = req.body;
     const user1_id = req.session.user.id;
     const user2_id = userId;
     let relStatus;
-console.log(action);
     if (action === "send") {
         //insert new row with status pending
         db.addFriendReq( user1_id, user2_id, 1 ).then(result => {
@@ -279,6 +285,8 @@ console.log(action);
                 relStatus: "pending"
             });
         });
+        console.log(action);
+
     } else if (action === "cancel") {
         //delete exist row
         db.cancelFriendReq(user1_id, user2_id).then(result => {
@@ -323,5 +331,5 @@ app.get("*", function(req, res) {
 });
 
 app.listen(8080, function() {
-    console.log("I'm listening.");
+    console.log("LISTENING TO SERVER");
 });
