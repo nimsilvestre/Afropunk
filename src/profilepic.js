@@ -3,7 +3,7 @@ import React from "react";
 export function ProfilePic(props) {
     let image;
     if (!props.image) {
-        image = "./public/default.png";
+        image = "/public/default.png";
     } else {
         image = props.image;
     }

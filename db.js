@@ -139,43 +139,65 @@ module.exports.getUserInfoById = function(id) {
         });
 };
 
-module.exports.senderRequestStatus = function(senderId, recipientId) {
+//MODULE FRIEND REQUEST
+module.exports.sendRequestStatus = function(user1_id, user2_id) {
+    const q = `SELECT curr_status FROM friends
+    WHERE user1_id = $1 AND user2_id = $2
+        OR  user1_id = $2 AND user2_id = $1`;
+    const params = [user1_id, user2_id];
     return db
-        .query(
-            `INSERT into connection_requests (sender_id, recipient_id, status) VALUES ($1, $2, $3)`,
-            [senderId, recipientId, 1]
-        )
-        .then(() => {
-        })
-        .catch(() => {
-        });
-};
-
-module.exports.getFriendRequestInfo = function(senderId, recipientId) {
-    return db.query(
-            `SELECT * FROM connection_requests
-            WHERE (recipient_id = $1 AND sender_id = $2)
-            OR (recipient_id = $2 and sender_id = $1)`,
-            [senderId, recipientId]
-        )
+        .query(q, params)
         .then(results => {
-            return results;
+            return results.rows[0];
+        })
+        .catch((err) => {
+            console.log("Here was the error", err);
         });
 };
 
-/*
-    const PENDING = 1, ACCEPTED = 2;
 
-const q = `
-    SELECT users.id, first, last, image, status
-    FROM friend_requests
-    JOIN users
-    ON (status = ${PENDING} AND recipient_id = $1 AND requester_id = users.id)
-    OR (status = ${ACCEPTED} AND recipient_id = $1 AND requester_id = users.id)
-    OR (status = ${ACCEPTED} AND requester_id = $1 AND recipient_id = users.id)
-`;
-function getFriendStatus(aId, bId) {
-    const q = `SELECT * FROM `
+module.exports.addFriendReq = function(user1_id, user2_id, curr_status) {
+    const q = `
+        INSERT INTO friends (user1_id, user2_id, curr_status)
+        VALUES ($1, $2, $3)
+        RETURNING id`
+    const params = [ user1_id, user2_id, curr_status ]
+    return db.query(q, params).then(results => {
+        console.log('RESULTS || ADDFRIENDREQ.results.rows[0]', results.rows[0])
+        return results.rows[0];
+    }).catch(err => { console.log('ERR IN ADDFRIENDREQ || DB.JS', err)})
 }
 
-*/
+module.exports.cancelFriendReq = function(user1_id, user2_id) {
+    const q = `
+        DELETE FROM friends WHERE user1_id = $1 AND user2_id = $2`
+    const params = [ user1_id, user2_id ]
+    return db.query(q, params).then(results => {
+        console.log('RESULTS ||     CANCELED FRIENDREQ', results)
+        console.log('RESULTS || CANCELED.results.rows[0]', results.rows[0])
+        return results.rows[0];
+    }).catch(err => { console.log('ERR IN CANCELFRIENDREQ || DB.JS', err)})
+}
+
+module.exports.acceptFriendReq = function(user1_id, user2_id, curr_status) {
+    const q = `
+        UPDATE friends SET curr_status = $3
+        WHERE user1_id = $2
+        AND user2_id = $1`
+    const params = [ user1_id, user2_id ]
+    return db.query(q, params).then(results => {
+        return results
+    }).catch(err => { console.log('err | db.js | accept friend', err) })
+}
+
+
+module.exports.deleteFriend = function(user1_id, user2_id) {
+    const q = `
+        DELETE FROM friends
+        WHERE user1_id = $1 AND user2_id = $2
+        OR user1_id = $2 AND user2_id = $1`
+    const params = [ user1_id, user2_id ]
+    return db.query(q, params).then(results => {
+        return results
+    }).catch(err => { console.log('err | db.js | delete friend', err) })
+}
