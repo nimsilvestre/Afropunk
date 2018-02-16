@@ -6,7 +6,7 @@ export class OtherUser extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            image: "",
+            image: null,
             user: "",
             bio: "",
             details: {},
@@ -27,7 +27,7 @@ export class OtherUser extends React.Component {
                     .then(result => {
                         this.setState({
                             relStatus: result.data.status,
-                            loggedInUserIsSender: result.data.isSender
+                            user2_id: result.data.user2_id
                         });
                     });
             });
@@ -46,10 +46,15 @@ export class OtherUser extends React.Component {
                     image: data.imageUrl,
                     bio: data.bio
                 });
-                axios.post('/getRelStatus', {userId : this.state.id}).then((result) => {
-                        this.setState({relStatus : result.data.status, loggedInUserIsSender: result.data.isSender});
+                axios
+                    .post("/getRelStatus", { userId: this.state.id })
+                    .then(result => {
+                        this.setState({
+                            relStatus: result.data.status,
+                            user2_id: result.data.user2_id
+                        });
                         console.log(this.state);
-                })
+                    });
             }
         });
     }
@@ -62,49 +67,57 @@ export class OtherUser extends React.Component {
             image = this.props.image;
         }
 
-        console.log('rendering otheruser', this.state);
+        console.log("rendering otheruser", this.state);
 
         return (
             <div className="other-profile">
                 <div className="profile-picture">
                     <img className="otherprofile-pic" src={image} />
+                    <div className="profile-info">
+                        <h3>First Name:</h3>
+                        <p>{this.state.first}</p>
+                        <h3>Last Name:</h3>
+                        <p>{this.state.last}</p>
+                        <h3>About me:</h3>
+                        <p>{this.state.bio}</p>
+                    </div>
                 </div>
-                <div>
+                <div className="btn-friend_req">
                     {this.state.relStatus == "none" && (
                         <button
-
-                            onClick={() => this.changeRelStatus("send")}>
-                            Send friend request
+                            className="btn striped-shadow dark"
+                            onClick={() => this.changeRelStatus("send")}
+                        >
+                            <span>Add Friend</span>
                         </button>
                     )}
+                    {this.state.relStatus == "pending" &&
+                        this.state.user2_id == this.state.id && (
+                            <button
+                                className="btn striped-shadow dark"
+                                onClick={() => this.changeRelStatus("cancel")}
+                            >
+                                <span>Unfriend</span>
+                            </button>
+                        )}
+                    {this.state.relStatus == "pending" &&
+                        this.state.user2_id != this.state.id && (
+                            <button
+                                className="btn striped-shadow dark"
+                                onClick={() => this.changeRelStatus("accept")}
+                            >
+                                <span>Accept</span>
+                            </button>
+                        )}
                     {this.state.relStatus == "accept" && (
                         <button
-                            onClick={() => this.changeRelStatus("accept")}
-                        >
-                            Accept friend request
-                        </button>
-                    )}
-                    {this.state.relStatus == "pending" && (
-                        <button
-                            onClick={() => this.changeRelStatus("cancel")}
-                        >
-                            Delete friend request
-                        </button>
-                    )}
-                    {this.state.relStatus == "friends" && (
-                        <button
+                            className="btn striped-shadow dark"
                             onClick={() => this.changeRelStatus("unfriend")}
                         >
-                            Unfriend
+                            <span>Unfriend</span>
                         </button>
                     )}
                 </div>
-                <h3>First Name:</h3>
-                <p>{this.state.first}</p>
-                <h3>Last Name:</h3>
-                <p>{this.state.last}</p>
-                <h3>About me:</h3>
-                <p>{this.state.bio}</p>
             </div>
         );
     }

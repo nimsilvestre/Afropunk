@@ -1,4 +1,4 @@
-^console.log("LISTENING TO QUERIES");
+console.log("LISTENING TO QUERIES");
 
 const spicedPg = require("spiced-pg");
 const bcrypt = require("bcryptjs");
@@ -106,22 +106,11 @@ module.exports.updateProfilePic = function(img, id) {
 };
 
 //Update / set bio
-module.exports.updateBio = function(bio, id) {
+module.exports.updateUserBio = function(bio, id) {
+    const q = `UPDATE users
+            SET bio = $1 WHERE id = $2`;
     const params = [bio, id];
-    const q = `
-        UPDATE users
-        SET bio = $1
-        WHERE id = $2
-        RETURNING bio`;
-    return db
-        .query(q, params)
-        .then(results => {
-            console.log("results from updateBio db", results.rows[0]);
-            return results.rows[0];
-        })
-        .catch(err => {
-            console.log("error in updateBio db", err);
-        });
+    return db.query(q, params);
 };
 
 module.exports.getUserInfoById = function(id) {
@@ -141,7 +130,7 @@ module.exports.getUserInfoById = function(id) {
 
 //MODULE FRIEND REQUEST
 module.exports.sendRequestStatus = function(user1_id, user2_id) {
-    const q = `SELECT curr_status, user1_id FROM friends
+    const q = `SELECT curr_status, user2_id FROM friends
     WHERE (user1_id = $1 AND user2_id = $2)
         OR  (user1_id = $2 AND user2_id = $1)`;
     const params = [user1_id, user2_id];
@@ -150,54 +139,125 @@ module.exports.sendRequestStatus = function(user1_id, user2_id) {
         .then(results => {
             return results.rows[0];
         })
-        .catch((err) => {
+        .catch(err => {
             console.log("Here was the error", err);
         });
 };
-
 
 module.exports.addFriendReq = function(user1_id, user2_id, curr_status) {
     const q = `
         INSERT INTO friends (user1_id, user2_id, curr_status)
         VALUES ($1, $2, $3)
-        RETURNING id`
-    const params = [ user1_id, user2_id, curr_status ]
-    return db.query(q, params).then(results => {
-        console.log('RESULTS || ADDFRIENDREQ.results.rows[0]', results.rows[0])
-        return results.rows[0];
-    }).catch(err => { console.log('ERR IN ADDFRIENDREQ || DB.JS', err)})
-}
+        RETURNING id`;
+    const params = [user1_id, user2_id, curr_status];
+    return db
+        .query(q, params)
+        .then(results => {
+            console.log(
+                "RESULTS || ADDFRIENDREQ.results.rows[0]",
+                results.rows[0]
+            );
+            return results.rows[0];
+        })
+        .catch(err => {
+            console.log("ERR IN ADDFRIENDREQ || DB.JS", err);
+        });
+};
 
 module.exports.cancelFriendReq = function(user1_id, user2_id) {
     const q = `
-        DELETE FROM friends WHERE user1_id = $1 AND user2_id = $2`
-    const params = [ user1_id, user2_id ]
-    return db.query(q, params).then(results => {
-        console.log('RESULTS ||     CANCELED FRIENDREQ', results)
-        console.log('RESULTS || CANCELED.results.rows[0]', results.rows[0])
-        return results.rows[0];
-    }).catch(err => { console.log('ERR IN CANCELFRIENDREQ || DB.JS', err)})
-}
+        DELETE FROM friends WHERE user1_id = $1 AND user2_id = $2`;
+    const params = [user1_id, user2_id];
+    return db
+        .query(q, params)
+        .then(results => {
+            console.log("RESULTS || CANCELED FRIENDREQ", results);
+            console.log("RESULTS || CANCELED.results.rows[0]", results.rows[0]);
+            return results.rows[0];
+        })
+        .catch(err => {
+            console.log("ERR IN CANCELFRIENDREQ || DB.JS", err);
+        });
+};
 
 module.exports.acceptFriendReq = function(user1_id, user2_id, curr_status) {
+    console.log("accept func");
     const q = `
-        UPDATE friends SET curr_status = $3
-        WHERE user1_id = $2
-        AND user2_id = $1`
-    const params = [ user1_id, user2_id ]
-    return db.query(q, params).then(results => {
-        return results
-    }).catch(err => { console.log('err | db.js | accept friend', err) })
-}
-
+        UPDATE friends SET curr_status = 2
+        WHERE (user1_id = $2
+        AND user2_id = $1) OR (user1_id = $1
+        AND user2_id = $2)  `;
+    const params = [user1_id, user2_id];
+    return db
+        .query(q, params)
+        .then(results => {
+            return results;
+        })
+        .catch(err => {
+            console.log("err | db.js | accept friend", err);
+        });
+};
 
 module.exports.deleteFriend = function(user1_id, user2_id) {
     const q = `
         DELETE FROM friends
         WHERE user1_id = $1 AND user2_id = $2
-        OR user1_id = $2 AND user2_id = $1`
-    const params = [ user1_id, user2_id ]
+        OR user1_id = $2 AND user2_id = $1`;
+    const params = [user1_id, user2_id];
+    return db
+        .query(q, params)
+        .then(results => {
+            return results;
+        })
+        .catch(err => {
+            console.log("err | db.js | delete friend", err);
+        });
+};
+
+module.exports.getFriends = function(userId) {
+    const q = `SELECT users.first, users.last, users.imageUrl
+                FROM users
+                JOIN friends
+                ON (user1_id = usersId AND user1_id = $1)
+                OR (user2_id = user.id AND user2_id = $1 AND user2_id = $1)
+                WHERE curr_status = 2
+                AND (user2_id = $1 OR user1_id = $1)`;
+    params = [userId];
     return db.query(q, params).then(results => {
-        return results
-    }).catch(err => { console.log('err | db.js | delete friend', err) })
+        console.log("getFriends FROM DB:", RESULTS);
+        result = result.rows.map(row => {
+            //console.log('db.getFriends', results);
+            if (row.imageUrl) {
+                row.imageUrl = config.s3Url + row.imageUrl;
+            }
+            return row;
+            console.log("getFriends FROM DB:", row);
+        });
+    });
+};
+/*
+
+module.exports.getFriendRequests = function() {
+    const params = [userId, 1];
+    const q = `SELECT users.id, users.first, users.last, users.imageUrl
+               FROM users
+               JOIN friends
+               ON (user1_id = users.id)
+               WHERE curr_status = $2
+               AND (user2_id = $1)`;
+    return new Promise(function(resolve, reject) {
+        db.query(q, params).then((result) => {
+            result = result.rows.map((row) => {
+                if(row.imageUrl) {
+                    row.imageUrl = config.s3Url + row.imageUrl;
+                }
+                return row;
+            })
+           resolve(result);
+        })
+    })
 }
+
+
+
+*/

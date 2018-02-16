@@ -3,12 +3,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter, Route } from "react-router-dom";
 import { Link } from "react-router";
+import reducers from './reducers'
+
 
 //REDUX
+const store = createStore(reducers, composeWithDevTools(applyMiddleware(reduxPromise)));
+
 import { createStore, applyMiddleware } from 'redux';
-import ReduxPromise from 'redux-promise'; // that is the middleware
+import reduxPromise from 'redux-promise'; // that is the middleware
 import { Provider } from "react-redux";
-import reducers from './reducers';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 // Two main pages you can go to:
 import { Welcome } from "./welcome";
@@ -19,13 +23,12 @@ import App from "./app";
 //THIS CODE CHECK THE URL IN THE COOKIES TO SEE IF THE USER IS LOGGED IN
 var component;
 // ReduxPromise is the middleware!!!
-const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 // createStore is refering to our storage!
 
 if (location.pathname == "/welcome") {
     component = <Welcome />;
 } else {
-    component = <Provider store ={createStoreWithMiddleware(reducers)}><App /></Provider>
+    component = <Provider store ={store}><App /></Provider>
 }
 
 

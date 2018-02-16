@@ -123,7 +123,7 @@ app.post("/login", (req, res) => {
         db
             .getUserInfo(req.body.email)
             .then(results => {
-                console.log("login",results);
+                console.log("login", results);
                 return db
                     .checkPassword(req.body.password, results.password)
                     .then(match => {
@@ -200,9 +200,22 @@ app.post("/pic-upload", uploader.single("file"), (req, res) => {
 
 // UPDATE BIO
 app.post("/updateBio", (req, res) => {
-    db.updateBio(req.body.bio, req.session.user.id).then(results => {
-        res.json({ success: true, bio: req.body.bio });
-    });
+    db
+        .updateUserBio(req.body.bio, req.session.user.id)
+        .then(results => {
+            res.json({
+                success: true
+            });
+        })
+        .catch(err => {
+            console.log(
+                "There was an erro with app post submit-bio in index.js",
+                err
+            );
+            res.json({
+                success: false
+            });
+        });
 });
 
 //OTHER USERS PROFILE PAGE ROUTE
@@ -244,23 +257,26 @@ app.post("/getRelStatus", (req, res) => {
         if (!result) {
             relStatus = "none";
             res.json({
-                status: relStatus});
+                status: relStatus
+            });
         } else {
             if (result.curr_status == 1) {
                 console.log("pending");
                 relStatus = "pending";
                 res.json({
-                    status: relStatus});
+                    status: relStatus,
+                    user2_id: result.user2_id
+                });
             } else {
-                if ((result.curr_status == 2)) {
+                if (result.curr_status == 2) {
                     console.log("accepted");
                     res.json({
-                        relStatus = "accepted"
-                        status: relStatus});
+                        status: "accept"
+                    });
                 } else {
-                    if ((result.curr_status == 3)) {
+                    if (result.curr_status == 3) {
+                        console.log("cancel");
                         res.json({
-                            console.log("canceled");
                             status: "none"
                         });
                     }
@@ -273,20 +289,19 @@ app.post("/getRelStatus", (req, res) => {
 
 //ROUTER FOR GETTING THE CHANGE RELATION STATUS:
 app.post("/changeRelStatus", (req, res) => {
-    const {action, userId} = req.body;
+    const { action, userId } = req.body;
     const user1_id = req.session.user.id;
     const user2_id = userId;
     let relStatus;
     if (action === "send") {
         //insert new row with status pending
-        db.addFriendReq( user1_id, user2_id, 1 ).then(result => {
+        db.addFriendReq(user1_id, user2_id, 1).then(result => {
             res.json({
                 success: true,
                 relStatus: "pending"
             });
         });
         console.log(action);
-
     } else if (action === "cancel") {
         //delete exist row
         db.cancelFriendReq(user1_id, user2_id).then(result => {
@@ -295,7 +310,7 @@ app.post("/changeRelStatus", (req, res) => {
                 relStatus: "cancel"
             });
         });
-    } else if (action === "accept") {
+    } else if (action == "accept") {
         //update status to friends
         db.acceptFriendReq(user1_id, user2_id, 2).then(result => {
             res.json({
@@ -314,6 +329,82 @@ app.post("/changeRelStatus", (req, res) => {
     }
 });
 
+//ACTIONS ROUTING:
+
+/*app.get('/getfriendrequests', (req, res) => {
+    let userId = req.session.user.id
+    //console.log('app.get /friends');
+    db.getFriends(userId).then((results) => {
+        //console.log('get friends for page || index.js', results)
+        res.json({
+            success : true,
+            data: results
+        })
+    }).catch(err => { console.log('Error in index.js app.get friends line 323 ', err) })
+})
+*/
+
+app.get("/getfriends", (req, res) => {
+    let userId = req.session.user.id;
+    console.log("CHECKING GETFRIENDS ROUTE", userId);
+    db.getFriends(userId).then(result => {
+        console.log("getFriends FROM DB:", result);
+        response.json({
+            friends: result
+        });
+    });
+});
+/*
+app.get('/getfriendrequests', (req, res) => {
+    let userId = req.session.user.id;
+    db.getFriendRequests(userId).then((result) => {
+        console.log("friend requests", result);
+        response.json({
+            friendRequests: result // go to reducers/reducers_friends.js
+        })
+    })
+})
+*/
+
+/*
+app.post('/unfriend', (request, response) => {
+    const { userid } = request.body; // this userid is from the person we want to unfriend.
+    console.log(userid);
+    let params = [request.session.user.id, userid];
+    let q = "DELETE FROM friends WHERE (user1_id = $1 AND user2_id = $2) OR (user2_id = $1 AND user1_id = $2)";
+    db.query(q, params).then((data) => {
+        getFriends(request.session.user.id).then((result) => { // once the user is deleted we call the function getFriends again!
+            // now that we had deleted the row please send me my new friend, so that I can change the redux store, in order to change the data!
+            console.log('friends are ', result);
+            response.json({
+                friends: result
+            })
+        })
+    })
+})
+
+app.post('/acceptRequest', (request, response) => {
+    let friends= [];
+    let friendRequests = [];
+    const { userid } = request.body;
+    console.log(userid);
+    let params = [request.session.user.id , userid, "friends"];
+    let q = "UPDATE friends SET curr_status = $3 WHERE user1_id = $2 AND user2_id = $1";
+    db.query(q, params).then((result) => {
+        getFriends(request.session.user.id).then((result) => {
+            friends = result;
+            getFriendRequests(request.session.user.id).then((result) => {
+                friendRequests = result;
+                response.json({
+                    friends : friends,
+                    friendRequests : friendRequests
+                })
+            })
+        })
+    })
+})
+*/
+
 //LOG OUT OF HEREEEE
 app.get("/logout", function(req, res) {
     req.session.user = null;
@@ -330,6 +421,6 @@ app.get("*", function(req, res) {
     }
 });
 
-app.listen(8080, function() {
-    console.log("LISTENING TO SERVER");
-});
+app.listen(process.env.PORT || 8080, () =>
+    console.log(`I'm listening on 8080.`)
+);

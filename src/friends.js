@@ -1,7 +1,7 @@
 import React, { Component } from 'react'; //react is dealing with the view/frontEnd part
 import { connect } from 'react-redux'; // react-redux --> just connect react and redux!
 import { bindActionCreators } from 'redux';
-import { fetchFriends, fetchFriendRequests, unfriend, accept } from '../actions/index'; // .. is to get to the root folder: src
+import { fetchFriends, fetchFriendRequests, unfriend, accept } from './actions/index'; // .. is to get to the root folder: src
 //meaning of fetch: you are requisting information from somewhere.
 
 
@@ -16,10 +16,10 @@ class Friends extends Component { // this line of code is react!!
             return this.props.friends.map((friend) => { // the map function is taking each item of my array and converting it into html,
                 // the array will have an object( first, last, id, profilpic)
                 return (
-                    <div className="grid-item" key={friend.id}>
-                        <p>{friend.first_name} {friend.last_name}</p>
-                        {friend.profile_pic && <img className="friend-pic" src={friend.profile_pic} />}
-                        {!friend.profile_pic && <img className="friend-pic" src='./images/default.jpg' />}
+                    <div key={friend.id}>
+                        <p>{friend.first} {friend.last}</p>
+                        {friend.image && <img className="friend-pic" src={friend.image} />}
+                        {!friend.image && <img className="friend-pic" src='./public/default.jpg' />}
                         <br />
                         <button className="action-btn" onClick={() => this.props.unfriend(friend.id)}>Unfriend</button>
 
@@ -34,9 +34,9 @@ class Friends extends Component { // this line of code is react!!
             return this.props.friendRequests.map((friendRequest) => {
                 return (
                     <div className="grid-item" key={friendRequest.id}>
-                        <p>{friendRequest.first_name} {friendRequest.last_name}</p>
-                        {friendRequest.profile_pic && <img className="friend-pic" src={friendRequest.profile_pic} />}
-                        {!friendRequest.profile_pic && <img className="friend-pic" src='./images/default.jpg' />}
+                        <p>{friendRequest.first} {friendRequest.last}</p>
+                        {friendRequest.image && <img className="friend-pic" src={friendRequest.image} />}
+                        {!friendRequest.image && <img className="friend-pic" src='./images/default.jpg' />}
                         <br />
                         <button className="action-btn" onClick={() => this.props.accept(friendRequest.id)}>Accept Request</button>
                     </div>

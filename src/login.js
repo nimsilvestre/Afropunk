@@ -18,19 +18,20 @@ export class Login extends React.Component {
     }
 
     submit() {
-        axios.post("/login", {
-            email: this.email,
-            password: this.password
-        })
-        .then(({ data }) => {
-            if (data.success) {
-                location.replace("/"); //This is necessary to unable to backspace in the browser
-            } else {
-                this.setState({
-                error: true
-                });
-            }
-        });
+        axios
+            .post("/login", {
+                email: this.email,
+                password: this.password
+            })
+            .then(({ data }) => {
+                if (data.success) {
+                    location.replace("/"); //This is necessary to unable to backspace in the browser
+                } else {
+                    this.setState({
+                        error: true
+                    });
+                }
+            });
     }
 
     render() {
@@ -38,12 +39,25 @@ export class Login extends React.Component {
             <div className="login-form">
                 <h2>LOGIN</h2>
                 <p>Email</p>
-                <input placeholder="Email" name="email" onChange={e => this.setFieldValue(e)} />
+                <input
+                    placeholder="Email"
+                    name="email"
+                    onChange={e => this.setFieldValue(e)}
+                />
                 <p>Password</p>
-                <input placeholder="Password" name="password" type="password" onChange={e => this.setFieldValue(e)} />
-                <button onClick={() => this.submit()}>Login</button>
-                {this.state.error && <div>Invalid Authentification! Try again.</div>}
-                    <Link className="login-hover" to="/">REGISTER</Link>
+                <input
+                    placeholder="Password"
+                    name="password"
+                    type="password"
+                    onChange={e => this.setFieldValue(e)}
+                />
+                <button className="button" onClick={() => this.submit()}>Login</button>
+                {this.state.error && (
+                    <div>Invalid Authentification! Try again.</div>
+                )}
+                <Link className="login-hover" to="/">
+                    Register
+                </Link>
             </div>
         );
     }
